@@ -9,7 +9,7 @@
 #include <drm/drm_cache.h>
 #include "drm_local/amdxdna_accel.h"
 
-#include "amdxdna_drv.h"
+#include "amdxdna_drm.h"
 #include "amdxdna_ctx.h"
 #include "amdxdna_trace.h"
 
@@ -67,6 +67,7 @@ void amdxdna_hwctx_suspend(struct amdxdna_client *client)
 		xdna->dev_info->ops->hwctx_suspend(hwctx);
 	mutex_unlock(&client->hwctx_lock);
 }
+EXPORT_SYMBOL_NS(amdxdna_hwctx_suspend, ACCEL_AMDXDNA_COMMON);
 
 void amdxdna_hwctx_resume(struct amdxdna_client *client)
 {
@@ -80,6 +81,7 @@ void amdxdna_hwctx_resume(struct amdxdna_client *client)
 		xdna->dev_info->ops->hwctx_resume(hwctx);
 	mutex_unlock(&client->hwctx_lock);
 }
+EXPORT_SYMBOL_NS(amdxdna_hwctx_resume, ACCEL_AMDXDNA_COMMON);
 
 static void amdxdna_hwctx_destroy_rcu(struct amdxdna_hwctx *hwctx,
 				      struct srcu_struct *ss)
@@ -118,6 +120,7 @@ void amdxdna_hwctx_remove_all(struct amdxdna_client *client)
 	}
 	mutex_unlock(&client->hwctx_lock);
 }
+EXPORT_SYMBOL_NS(amdxdna_hwctx_remove_all, ACCEL_AMDXDNA_COMMON);
 
 int amdxdna_drm_create_hwctx_ioctl(struct drm_device *dev, void *data, struct drm_file *filp)
 {
@@ -373,6 +376,7 @@ void amdxdna_job_put(struct amdxdna_sched_job *job)
 {
 	kref_put(&job->refcnt, amdxdna_sched_job_release);
 }
+EXPORT_SYMBOL_NS(amdxdna_job_put, ACCEL_AMDXDNA_COMMON);
 
 int amdxdna_cmd_submit(struct amdxdna_client *client,
 		       u32 cmd_bo_hdl, u32 *arg_bo_hdls, u32 arg_bo_cnt,
@@ -566,3 +570,4 @@ int amdxdna_drm_wait_cmd_ioctl(struct drm_device *dev, void *data, struct drm_fi
 
 	return ret;
 }
+EXPORT_SYMBOL_NS(amdxdna_drm_wait_cmd_ioctl, ACCEL_AMDXDNA_COMMON);

@@ -4,6 +4,7 @@
  */
 
 #include <linux/version.h>
+#include <linux/dma-mapping.h>
 #include <linux/sched/clock.h>
 
 #include "amdxdna_devel.h"
@@ -12,14 +13,17 @@
 int iommu_mode;
 module_param(iommu_mode, int, 0644);
 MODULE_PARM_DESC(iommu_mode, "0 = w/ PASID (Default), 1 = wo/ PASID, 2 = Bypass");
+EXPORT_SYMBOL_NS(iommu_mode, ACCEL_AMDXDNA_COMMON);
 
 bool priv_load;
 module_param(priv_load, bool, 0644);
 MODULE_PARM_DESC(priv_load, "Privileged loading runtime configure (Default false)");
+EXPORT_SYMBOL_NS(priv_load, ACCEL_AMDXDNA_COMMON);
 
 int start_col_index = -1;
 module_param(start_col_index, int, 0600);
 MODULE_PARM_DESC(start_col_index, "Force start column, default -1 (auto select)");
+EXPORT_SYMBOL_NS(start_col_index, ACCEL_AMDXDNA_COMMON);
 
 int amdxdna_iommu_mode_setup(struct amdxdna_dev *xdna)
 {
@@ -54,6 +58,7 @@ int amdxdna_iommu_mode_setup(struct amdxdna_dev *xdna)
 
 	return 0;
 }
+EXPORT_SYMBOL_NS(amdxdna_iommu_mode_setup, ACCEL_AMDXDNA_COMMON);
 
 struct sg_table *amdxdna_alloc_sgt(struct amdxdna_dev *xdna, size_t sz,
 				   struct page **pages, u32 nr_pages)
@@ -86,7 +91,7 @@ void amdxdna_free_sgt(struct amdxdna_dev *xdna, struct sg_table *sgt)
 
 int amdxdna_mem_map(struct amdxdna_dev *xdna, struct amdxdna_mem *mem)
 {
-	struct pci_dev *pdev = to_pci_dev(xdna->ddev.dev);
+	struct device *dev = xdna->ddev.dev;
 	struct sg_table *sgt = NULL;
 	int ret;
 
@@ -101,7 +106,7 @@ int amdxdna_mem_map(struct amdxdna_dev *xdna, struct amdxdna_mem *mem)
 	if (!sgt)
 		return -ENOMEM;
 
-	if (!dma_map_sg(&pdev->dev, sgt->sgl, sgt->orig_nents, DMA_BIDIRECTIONAL)) {
+	if (!dma_map_sg(dev, sgt->sgl, sgt->orig_nents, DMA_BIDIRECTIONAL)) {
 		XDNA_ERR(xdna, "dma map sg failed");
 		ret = -ENOMEM;
 		goto free_sgt;
@@ -123,7 +128,7 @@ int amdxdna_mem_map(struct amdxdna_dev *xdna, struct amdxdna_mem *mem)
 	return 0;
 
 unmap_and_free:
-	dma_unmap_sg(&pdev->dev, sgt->sgl, sgt->orig_nents, DMA_BIDIRECTIONAL);
+	dma_unmap_sg(dev, sgt->sgl, sgt->orig_nents, DMA_BIDIRECTIONAL);
 free_sgt:
 	amdxdna_free_sgt(xdna, sgt);
 	return ret;
@@ -131,12 +136,12 @@ free_sgt:
 
 void amdxdna_mem_unmap(struct amdxdna_dev *xdna, struct amdxdna_mem *mem)
 {
-	struct pci_dev *pdev = to_pci_dev(xdna->ddev.dev);
+	struct device *dev = xdna->ddev.dev;
 	struct sg_table *sgt = mem->sgt;
 
 	if (!sgt)
 		return;
 
-	dma_unmap_sg(&pdev->dev, sgt->sgl, sgt->orig_nents, DMA_BIDIRECTIONAL);
+	dma_unmap_sg(dev, sgt->sgl, sgt->orig_nents, DMA_BIDIRECTIONAL);
 	amdxdna_free_sgt(xdna, sgt);
 }

@@ -3,10 +3,9 @@
  * Copyright (C) 2022-2024, Advanced Micro Devices, Inc.
  */
 
-#ifndef _AMDXDNA_DRV_H_
-#define _AMDXDNA_DRV_H_
+#ifndef _AMDXDNA_DRM_H_
+#define _AMDXDNA_DRM_H_
 
-#include <linux/pci.h>
 #include <linux/srcu.h>
 #include <linux/uuid.h>
 #include <drm/drm_drv.h>
@@ -25,6 +24,8 @@
 
 #define to_xdna_dev(drm_dev) \
 	((struct amdxdna_dev *)container_of(drm_dev, struct amdxdna_dev, ddev))
+
+extern const struct drm_driver amdxdna_drm_drv;
 
 struct amdxdna_dev;
 struct amdxdna_client;
@@ -159,11 +160,4 @@ struct amdxdna_client {
 	int				pasid;
 };
 
-/* Add device info below */
-extern const struct amdxdna_dev_info dev_npu1_info;
-extern const struct amdxdna_dev_info dev_npu2_info;
-extern const struct amdxdna_dev_info dev_npu3_info;
-extern const struct amdxdna_dev_info dev_npu4_info;
-extern const struct amdxdna_dev_info dev_npu5_info;
-
-#endif /* _AMDXDNA_DRV_H_ */
+#endif /* _AMDXDNA_DRM_H_ */

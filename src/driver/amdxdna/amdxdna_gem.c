@@ -7,7 +7,7 @@
 #include <linux/vmalloc.h>
 #include <drm/drm_cache.h>
 
-#include "amdxdna_drv.h"
+#include "amdxdna_drm.h"
 #include "amdxdna_gem.h"
 
 #ifdef AMDXDNA_DEVEL
@@ -447,6 +447,7 @@ mm_unlock:
 	mutex_unlock(&client->mm_lock);
 	return ERR_PTR(ret);
 }
+EXPORT_SYMBOL_NS(amdxdna_drm_alloc_dev_bo, ACCEL_AMDXDNA_COMMON);
 
 static struct amdxdna_gem_obj *
 amdxdna_drm_create_cmd_bo(struct drm_device *dev,
@@ -620,6 +621,7 @@ int amdxdna_gem_pin(struct amdxdna_gem_obj *abo)
 
 	return ret;
 }
+EXPORT_SYMBOL_NS(amdxdna_gem_pin, ACCEL_AMDXDNA_COMMON);
 
 void amdxdna_gem_unpin(struct amdxdna_gem_obj *abo)
 {
@@ -638,6 +640,7 @@ void amdxdna_gem_unpin(struct amdxdna_gem_obj *abo)
 out_unlock:
 	mutex_unlock(&abo->lock);
 }
+EXPORT_SYMBOL_NS(amdxdna_gem_unpin, ACCEL_AMDXDNA_COMMON);
 
 struct amdxdna_gem_obj *amdxdna_gem_get_obj(struct amdxdna_client *client,
 					    u32 bo_hdl, u8 bo_type)
@@ -659,6 +662,7 @@ struct amdxdna_gem_obj *amdxdna_gem_get_obj(struct amdxdna_client *client,
 	drm_gem_object_put(gobj);
 	return NULL;
 }
+EXPORT_SYMBOL_NS(amdxdna_gem_get_obj, ACCEL_AMDXDNA_COMMON);
 
 int amdxdna_drm_get_bo_info_ioctl(struct drm_device *dev, void *data, struct drm_file *filp)
 {
@@ -779,6 +783,7 @@ u32 amdxdna_gem_get_assigned_hwctx(struct amdxdna_client *client, u32 bo_hdl)
 	amdxdna_gem_put_obj(abo);
 	return ctxid;
 }
+EXPORT_SYMBOL_NS(amdxdna_gem_get_assigned_hwctx, ACCEL_AMDXDNA_COMMON);
 
 int amdxdna_gem_set_assigned_hwctx(struct amdxdna_client *client, u32 bo_hdl, u32 ctxid)
 {
@@ -800,6 +805,7 @@ int amdxdna_gem_set_assigned_hwctx(struct amdxdna_client *client, u32 bo_hdl, u3
 	amdxdna_gem_put_obj(abo);
 	return ret;
 }
+EXPORT_SYMBOL_NS(amdxdna_gem_set_assigned_hwctx, ACCEL_AMDXDNA_COMMON);
 
 void amdxdna_gem_clear_assigned_hwctx(struct amdxdna_client *client, u32 bo_hdl)
 {
@@ -816,3 +822,6 @@ void amdxdna_gem_clear_assigned_hwctx(struct amdxdna_client *client, u32 bo_hdl)
 
 	amdxdna_gem_put_obj(abo);
 }
+EXPORT_SYMBOL_NS(amdxdna_gem_clear_assigned_hwctx, ACCEL_AMDXDNA_COMMON);
+
+MODULE_LICENSE("GPL");

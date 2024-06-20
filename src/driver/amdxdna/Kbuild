@@ -15,9 +15,7 @@ ccflags-y += -I$(ROOT)/../../include
 ccflags-y += -g -Werror
 
 obj-m	+= amdxdna.o
-amdxdna-y := \
-	amdxdna_ctx.o \
-	amdxdna_gem.o \
+amdxdna-objs := \
 	amdxdna_sysfs.o \
 	amdxdna_mailbox.o \
 	amdxdna_mailbox_helper.o \
@@ -33,7 +31,10 @@ amdxdna-y := \
 	npu2_regs.o \
 	npu4_regs.o \
 	npu5_regs.o \
-	amdxdna_drv.o
+	amdxdna_pci_drv.o
+
+obj-m += amdxdna_common.o
+amdxdna_common-objs := amdxdna_gem.o amdxdna_drm.o amdxdna_ctx.o amdxdna_trace.o
 
 # TODO: This is a hack for 6.10. Looking for a solution
 $(obj)/%.o : $(src)/%.c FORCE
@@ -41,9 +42,6 @@ $(obj)/%.o : $(src)/%.c FORCE
 	$(call cmd,force_checksrc)
 
 # Helper functions for amdxdna development, but not for upstreaming
-amdxdna-y += amdxdna_devel.o
-
-# Place holder for npu3 support
-include $(ROOT)/npu3.mk
+amdxdna_common-objs += amdxdna_devel.o
 
 -include $(src)/extra_drv.mk
