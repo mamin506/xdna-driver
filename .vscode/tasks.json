@@ -1,0 +1,39 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Debug: build.sh",
+            "type": "shell",
+            "command": "./build.sh",
+            "args": [
+                "-debug"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [],
+            "detail": "Task to run build.sh with -debug option in the build folder."
+        },
+        {
+            "label": "Release: build.sh",
+            "type": "shell",
+            "command": "./build.sh",
+            "args": [
+                "-release"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/build"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            },
+            "problemMatcher": [],
+            "detail": "Task to run build.sh with -release option in the build folder."
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "version": 8,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 19,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "ConfigBase",
+            "hidden": false,
+            "description": "Default configuration",
+            "generator": "Unix Makefiles",
+            "displayName": "Config for debug",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "YES",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/build/${presetName}/install"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "Debug Build",
+            "hidden": false,
+            "description": "Debug build",
+            "displayName": "Build for debug",
+            "configurePreset": "ConfigBase",
+            "jobs": 8
+        }
+    ]
+}
